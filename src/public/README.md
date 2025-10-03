@@ -120,9 +120,3 @@ El juego muestra el progreso del ahorcado en **ASCII** según los intentos resta
    ```bash
    http://localhost/ahorcado/index.php
    ```
-
----
-
-## 📜 Licencia
-
-Este proyecto es de uso libre para fines educativos.
