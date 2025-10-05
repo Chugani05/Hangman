@@ -1,39 +1,19 @@
 <?php
-session_start();
+class WordProvider {
 
-$palabras = ["PROGRAMACION", "PHP", "AHORCADO", "JUEGO", "WEB"];
-
-if (!isset($_SESSION['palabra'])) {
-    $_SESSION['palabra'] = $palabras[array_rand($palabras)];
-    $_SESSION['intentos'] = 6;
-    $_SESSION['letras_usadas'] = [];
 }
 
-if (isset($_POST['letra'])) {
-    $letra = strtoupper($_POST['letra']);
-    if (!in_array($letra, $_SESSION['letras_usadas'])) {
-        $_SESSION['letras_usadas'][] = $letra;
-        if (strpos($_SESSION['palabra'], $letra) === false) {
-            $_SESSION['intentos']--;
-        }
-    }
+class Game {
+
 }
 
-$mostrar = "";
-foreach (str_split($_SESSION['palabra']) as $letra) {
-    $mostrar .= in_array($letra, $_SESSION['letras_usadas']) ? $letra : "_";
+class Storage {
+    
 }
 
-$mensaje = "";
-if ($mostrar === $_SESSION['palabra']) {
-    $mensaje = "Felicidades ¡Ganaste! La palabra era: " . $_SESSION['palabra'];
-}
-if ($_SESSION['intentos'] <= 0) {
-    $mensaje = "Lo siento ¡Perdiste! La palabra era: " . $_SESSION['palabra'];
-}
-
-function dibujoAhorcado($intentos) {
-    $estados = [
+class Renderer {
+    static public function ascii(int $attemptsLeft): string {
+    $state = [
         6 => " 
   +---+
   |   |
@@ -91,8 +71,44 @@ function dibujoAhorcado($intentos) {
       |
 ========= "
     ];
-    return "<pre>" . $estados[$intentos] . "</pre>";
+    return "<pre>" . $state[$attemptsLeft] . "</pre>";
 }
+}
+
+session_start();
+
+$palabras = ["PROGRAMACION", "PHP", "AHORCADO", "JUEGO", "WEB"];
+
+if (!isset($_SESSION['palabra'])) {
+    $_SESSION['palabra'] = $palabras[array_rand($palabras)];
+    $_SESSION['intentos'] = 6;
+    $_SESSION['letras_usadas'] = [];
+}
+
+if (isset($_POST['letra'])) {
+    $letra = strtoupper($_POST['letra']);
+    if (!in_array($letra, $_SESSION['letras_usadas'])) {
+        $_SESSION['letras_usadas'][] = $letra;
+        if (strpos($_SESSION['palabra'], $letra) === false) {
+            $_SESSION['intentos']--;
+        }
+    }
+}
+
+$mostrar = "";
+foreach (str_split($_SESSION['palabra']) as $letra) {
+    $mostrar .= in_array($letra, $_SESSION['letras_usadas']) ? $letra : "_";
+}
+
+$mensaje = "";
+if ($mostrar === $_SESSION['palabra']) {
+    $mensaje = "Felicidades ¡Ganaste! La palabra era: " . $_SESSION['palabra'];
+}
+if ($_SESSION['intentos'] <= 0) {
+    $mensaje = "Lo siento ¡Perdiste! La palabra era: " . $_SESSION['palabra'];
+}
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -103,7 +119,7 @@ function dibujoAhorcado($intentos) {
 <body>
 <h1>Juego del Ahorcado</h1>
 
-<?php echo dibujoAhorcado($_SESSION['intentos']); ?>
+<?php echo Renderer::ascii($_SESSION['intentos']); ?>
 
 <p>Palabra: <?php echo implode(" ", str_split($mostrar)); ?></p>
 <p>Intentos restantes: <?php echo $_SESSION['intentos']; ?></p>
