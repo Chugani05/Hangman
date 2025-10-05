@@ -1,6 +1,17 @@
 <?php
 class WordProvider {
+    private $filePath;
+    public function __construct(string $filePath) {
+        $this->filePath = $filePath;
+    }
 
+    public function randomWord(): string {
+        $words = file( $this->filePath);
+        $randomIndex = array_rand($words,1);
+        $randomWord = $words[$randomIndex];
+        $result = iconv('utf-8', 'ASCII//TRANSLIT', $randomWord);
+        return strtoupper(trim($result));
+    }
 }
 
 class Game {
@@ -77,10 +88,10 @@ class Renderer {
 
 session_start();
 
-$palabras = ["PROGRAMACION", "PHP", "AHORCADO", "JUEGO", "WEB"];
+$wordProvider = new WordProvider("./files/words.txt");
 
 if (!isset($_SESSION['palabra'])) {
-    $_SESSION['palabra'] = $palabras[array_rand($palabras)];
+    $_SESSION['palabra'] = $wordProvider->randomWord();
     $_SESSION['intentos'] = 6;
     $_SESSION['letras_usadas'] = [];
 }
