@@ -15,6 +15,76 @@ class WordProvider {
 }
 
 class Game {
+    private $word;
+    private $maxAttempts;
+    private $attemptsLeft;
+    private $usedLetters;
+
+    public function __construct(string $word, int $maxAttempts = 6, ?array $state = null) {
+        if ($state !== null) {
+           $this->word = $state["word"];
+           $this->maxAttempts = $state["max_attempts"];
+           $this->attemptsLeft = $state["attempts_left"];
+           $this->usedLetters = $state["used_letters"];
+        } else {
+            $this->word = $word;
+            $this->maxAttempts = $maxAttempts;
+            $this->attemptsLeft = $maxAttempts;
+            $this->usedLetters = [];
+        }
+    }
+
+    public function guessLetter(string $letter): void {
+        $letter = strtoupper($letter);
+
+        if (in_array($letter, $this->usedLetters)) {
+            return;
+        }
+        if (!str_contains($this->getWord(), $letter)) {
+            $this->attemptsLeft--;
+        }
+
+        $this->usedLetters[] = $letter;
+    }
+
+    public function getMaskedWord(): string {
+        $maskedWord = "";
+
+        foreach (str_split($this->getWord()) as $letra) {
+            $maskedWord .= in_array($letra, $this->getUsedLetters()) ? $letra : "_";
+        }
+        return $maskedWord;
+    }
+
+    public function getAttemptsLeft(): int {
+        return $this->attemptsLeft;
+    }
+
+    public function getUsedLetters(): array {
+        return $this->usedLetters;
+    }
+
+    public function isWon(): bool {
+        if ($this->getMaskedWord() == $this->getWord()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isLost(): bool {
+        if ($this->getAttemptsLeft() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public function getWord(): string {
+        return $this->word;
+    }
+
+    public function toState(): array {
+        return ["word" => $this->getWord(), "max_attempts" => $this->maxAttempts, "attempts_left" => $this->getAttemptsLeft(), "used_letters" => $this->getUsedLetters()];
+    }
 
 }
 
@@ -105,53 +175,43 @@ class Renderer {
 
 session_start();
 
-$wordProvider = new WordProvider("./files/words.txt");
+$storage = new Storage();
+$savedGame = $storage->get("saved_game");
 
-if (!isset($_SESSION['palabra'])) {
-    $_SESSION['palabra'] = $wordProvider->randomWord();
-    $_SESSION['intentos'] = 6;
-    $_SESSION['letras_usadas'] = [];
-}
+$wordProvider = new WordProvider("./files/words.txt");
+$game = new Game($wordProvider->randomWord(), state: $savedGame);
 
 if (isset($_POST['letra'])) {
     $letra = strtoupper($_POST['letra']);
-    if (!in_array($letra, $_SESSION['letras_usadas'])) {
-        $_SESSION['letras_usadas'][] = $letra;
-        if (strpos($_SESSION['palabra'], $letra) === false) {
-            $_SESSION['intentos']--;
-        }
-    }
+    $game->guessLetter($letra);
 }
 
-$mostrar = "";
-foreach (str_split($_SESSION['palabra']) as $letra) {
-    $mostrar .= in_array($letra, $_SESSION['letras_usadas']) ? $letra : "_";
-}
+$maskedWord = $game->getMaskedWord();
 
 $mensaje = "";
-if ($mostrar === $_SESSION['palabra']) {
-    $mensaje = "Felicidades ¡Ganaste! La palabra era: " . $_SESSION['palabra'];
+if ($game->isWon()) {
+    $mensaje = "Felicidades ¡Ganaste! La palabra era: " . $game->getWord();
 }
-if ($_SESSION['intentos'] <= 0) {
-    $mensaje = "Lo siento ¡Perdiste! La palabra era: " . $_SESSION['palabra'];
+if ($game->isLost()) {
+    $mensaje = "Lo siento ¡Perdiste! La palabra era: " . $game->getWord();
 }
 
-
+$storage->set("saved_game", $game->toState());
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Ahorcado en PHP</title>
+    <title>Hangman with PHP</title>
 </head>
 <body>
-<h1>Juego del Ahorcado</h1>
+<h1>Hangman Game</h1>
 
-<?php echo Renderer::ascii($_SESSION['intentos']); ?>
+<?php echo Renderer::ascii($game->getAttemptsLeft()); ?>
 
-<p>Palabra: <?php echo implode(" ", str_split($mostrar)); ?></p>
-<p>Intentos restantes: <?php echo $_SESSION['intentos']; ?></p>
-<p>Letras usadas: <?php echo implode(", ", $_SESSION['letras_usadas']); ?></p>
+<p>Palabra: <?php echo implode(" ", str_split($maskedWord)); ?></p>
+<p>Intentos restantes: <?php echo $game->getAttemptsLeft(); ?></p>
+<p>Letras usadas: <?php echo implode(", ", $game->getUsedLetters()); ?></p>
 
 <?php if ($mensaje == ""): ?>
     <form method="post">
