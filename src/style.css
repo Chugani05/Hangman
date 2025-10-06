@@ -6,3 +6,60 @@ body {
 p {
     font-size: 1.2em;
 }
+/* === Hangman Game Styles === */
+
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(13, 40px);
+    gap: 8px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.key {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #eee;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #D3D3D3;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.key:hover {
+    background-color: #ddd;
+    transform: scale(1.05);
+}
+
+.key.correct {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.key.incorrect {
+    background-color: #f44336;
+    color: white;
+}
+
+.key:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Botón de reinicio mejorado */
+.play-again {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.play-again:hover {
+    background-color: #1976D2;
+    transform: scale(1.05);
+}
