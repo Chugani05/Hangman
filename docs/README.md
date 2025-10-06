@@ -39,6 +39,7 @@ docker compose down
 ## Estructura de archivos
 
 ```
+.
 ├── Dockerfile
 ├── LICENSE
 ├── README.md
@@ -49,13 +50,16 @@ docker compose down
 │   └── mockup.png
 ├── php.ini
 └── src
-    └── public
-        ├── README.md
-        ├── files
-        │   └── words.txt
-        ├── index.php
-        ├── reset.php
-        └── style.css
+    ├── classes
+    │   ├── game.php
+    │   ├── renderer.php
+    │   ├── storage.php
+    │   └── wordProvider.php
+    ├── data
+    │   └── words.txt
+    ├── index.php
+    ├── reset.php
+    └── style.css
 ```
 
 ## Mockup
