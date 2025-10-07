@@ -1,7 +1,7 @@
 # Juego del Ahorcado en PHP
 
 <div align=center>
-  <img src="../imgs/v1.png">
+  <img src="./imgs/v1.png">
 </div>
 
 Este es un proyecto sencillo en *PHP* que implementa el clásico juego de *Ahorcado* como un juego basado en navegador, utilizando sesiones para gestionar el estado del juego.
