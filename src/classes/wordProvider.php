@@ -1,6 +1,11 @@
 <?php
 namespace classes;
 
+/**
+ * Clase WordProvider
+ * Proporciona palabras aleatorias desde un archivo de texto.
+ * @author chugani05
+ */
 class WordProvider {
     private $filePath;    
 

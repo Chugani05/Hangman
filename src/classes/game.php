@@ -1,6 +1,11 @@
 <?php
 namespace classes;
 
+/**
+ * Clase Game
+ * Esta clase implementa la lógica del juego de Ahorcado (Hangman).
+ * @author chugani05
+ */
 class Game {
     private $word;
     private $maxAttempts;

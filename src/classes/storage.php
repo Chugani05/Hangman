@@ -1,6 +1,11 @@
 <?php
 namespace classes;
 
+/**
+ * Clase Storage
+ * Esta clase facilita la gestión del almacenamiento en la sesión
+ * @author chugani05
+ */
 class Storage {
     private $key;    
 

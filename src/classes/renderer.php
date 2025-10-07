@@ -1,6 +1,12 @@
 <?php
 namespace classes;
 
+ /**
+ * Clase Renderer
+ * Esta clase proporciona métodos para renderizar diferentes representaciones
+ * visuales del estado del juego
+ * @author chugani05
+ */
 class Renderer {    
     /**
      * Devuelve una representación ASCII del estado del ahorcado según los intentos restantes.
