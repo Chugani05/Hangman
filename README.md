@@ -69,7 +69,7 @@ docker compose down
 ## Mockup
 
 <div align=center>
-  <img src="../imgs/mockup.png">
+  <img src="./imgs/mockup.png">
 </div>
 
 
