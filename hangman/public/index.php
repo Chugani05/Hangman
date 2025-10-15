@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 require __DIR__ . '/../src/Infrastructure/Autoload/Autoloader.php';
 \App\Infrastructure\Autoload\Autoloader::register('App\\', __DIR__ . '/../src');
-
 $config = require __DIR__ . '/../config/config.php';
 
-use \App\Infrastructure\Persistence\WordRepository as WordRepository;
+use App\Application\Services\GameService as GameService;
 
-$wordRepository = new WordRepository($config['storage']['words_file']);
-$word = $wordRepository->getRandomWord();
+$gameService = new GameService($config);
+$gameService->handle();
 ?>
 
 <!DOCTYPE html>
